@@ -1,0 +1,238 @@
+{% extends 'core/index.html' %}
+
+{% load staticfiles %}
+
+{% block title %}
+Personal Health Cloud | Fitness
+{% endblock %}
+
+{% block additional_css %}
+<link href="{% static 'css/plugins/datapicker/datepicker3.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block menu %}
+{% endblock %}
+
+{% block content %}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-lg-12">
+		<h2>{{request.user.get_full_name}}</h2>
+	</div>
+</div>
+
+<div class="row wrapper wrapper-content animated fadeInRight">
+	<div class="row m-t-lg">
+		<div class="col-lg-12">
+			<div class="tabs-container">
+				<div class="tabs-container">
+					<ul class="nav nav-tabs">
+						<li class="active"><a data-toggle="tab" href="#tab-general"> <h2><strong>General</strong></h2></a></li>
+						<li><a data-toggle="tab" href="#tab-password"> <h2><strong>Password</strong></h2></a></li>
+						{% comment %}<li class=""><a data-toggle="tab" href="#tab-billing"> <h2>Billing</h2></a></li>{% endcomment %}
+					</ul>
+					
+					<div class="tab-content ">
+						
+						<br><br>
+						
+						<div id="tab-general" class="tab-pane active">
+							<div class="panel-body">
+								
+								<div class="row">
+									<div class="col-lg-2">
+										<h2><strong>Gender</strong></h2>
+									</div>
+									
+									<div class="col-lg-2">
+										{% if profile.gender == 'M' %}
+										
+										<h2>Male</h2>
+										
+										{% elif profile.gender == 'F' %}
+										
+										<h2>Female</h2>
+										
+										{% endif %}
+									</div>
+								</div>
+								
+								<hr>
+								
+								<div class="row">
+									<div class="col-lg-2">
+										<h2><strong>Date of Birth</strong></h2>
+									</div>
+									
+									<div class="col-lg-2">
+										<h2>{{profile.dob}}</h2>
+									</div>
+								</div>
+								
+								<hr>
+								
+								<div class="row">
+									<div class="col-lg-2">
+										<h2><strong>Address</strong></h2>
+									</div>
+									
+									<div class="col-lg-2">
+										<h2>
+											{% if profile.address1 %}{{profile.address1}}{% endif%} {% if profile.address2 %}, {{profile.address2}}{% endif %}
+											{% if profile.city %}{{profile.city}}{% endif %} {% if profile.state %}{{profile.state.name_long}}{% endif %} {% if profile.zipcode %}{{profile.zipcode}}{% endif %}
+										</h2>
+									</div>
+								</div>
+								
+								<hr>
+								
+								<div class="row">
+									<div class="col-lg-2">
+										<h2><strong>Subscription Plan</strong></h2>
+									</div>
+									
+									<div class="col-lg-2">
+										<span class="badge"><h3>{{profile.subscription.name_short}}</h3></span>
+									</div>
+								</div>
+								
+								<hr>
+								
+								<div class="row">
+									<div class="col-lg-2">
+										<h2><strong>Email Subscription</strong></h2>
+									</div>
+									
+									<div class="col-lg-2">
+										{% if profile.email_subscription %}
+										
+										<span class="badge badge-primary"><h3>Enabled</h3></span>
+										
+										{% else %}
+										
+										<span class="badge badge-danger"><h3>Disabled</h3></span>
+										
+										{% endif %}
+									</div>
+								</div>
+								
+								<hr>
+								
+								<div class="row">
+									<div class="col-lg-2">
+										<h2><strong>Last Login</strong></h2>
+									</div>
+									
+									<div class="col-lg-2">
+										<h2>{% if request.user.last_login %}{{request.user.last_login}}{% endif %}</h2>
+									</div>
+								</div>
+								
+								<hr>
+								
+								<div class="row">
+									<div class="col-lg-2">
+										<h2><strong>Member Since</strong></h2>
+									</div>
+									
+									<div class="col-lg-2">
+										<h2>{{request.user.date_joined}}</h2>
+									</div>
+								</div>
+								
+								<hr>
+								
+								<div class="row">
+									<div class="col-lg-2">
+									</div>
+									
+									<div class="col-lg-4">
+										<br><br>
+										<a class="btn btn-default btn-lg" href="{% url 'portal-dashboard' %}"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;Dashboard</a>
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<a class="btn btn-success btn-lg" href="{% url 'users-profile-edit' %}"><i class="fa fa-edit"></i>&nbsp;&nbsp;Edit</a>
+										<br><br>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div id="tab-password" class="tab-pane">
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-lg-4">
+										<br><br>
+										<a class="btn btn-default btn-lg" href="{% url 'portal-dashboard' %}"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;Dashboard</a>
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<a class="btn btn-success btn-lg" href="{% url 'users-profile-edit' %}"><i class="fa fa-key"></i>&nbsp;&nbsp;Change Password</a>
+										<br><br>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						{% comment %}
+						<div id="tab-billing" class="tab-pane">
+							<div class="panel-body">
+								<div class="row">
+									<div class="col-lg-2">
+										<h2><strong>Billing Address</strong></h2>
+									</div>
+									
+									<div class="col-lg-2">
+										<h2>
+											{{billing.address1}} {% if billing.address2 %}, {{billing.address2}}{% endif %}
+											{{billing.city}} {{billing.state.name_long}} {{billing.zipcode}}
+										</h2>
+									</div>
+								</div>
+								
+								<hr>
+								
+								<div class="row">
+									<div class="col-lg-2">
+										<h2><strong>Subscription Plan</strong></h2>
+									</div>
+									
+									<div class="col-lg-2">
+										<h2>{{profile.subscription.name_short}}</h2>
+									</div>
+								</div>
+								
+								<hr>
+								
+								<div class="row">
+									<div class="col-lg-2">
+									</div>
+									
+									<div class="col-lg-4">
+										<br><br>
+										<a class="btn btn-default btn-lg" href="{% url 'portal-dashboard' %}"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;Dashboard</a>
+										&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+										<a class="btn btn-success btn-lg" href="{% url 'users-profile-edit' %}"><i class="fa fa-credit-card"></i>&nbsp;&nbsp;Change Plan</a>
+										<br><br>
+									</div>
+								</div>
+							</div>
+						</div>
+						{% endcomment %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+{% endblock %}
+
+{% block sidebar-tab-headers %}
+{% endblock %}
+
+{% block sidebar-tab-content %}
+{% endblock %}
+
+{% block additional_js %}
+
+<script src="{% static 'js/plugins/datapicker/bootstrap-datepicker.js' %}"></script>
+
+{% endblock %}

@@ -1,0 +1,72 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+
+{% block head %}
+
+<head>
+    {% block meta %}
+    	{% include 'core/meta.html' %}
+    {% endblock %}
+	
+	<title>{% block title %}Personal Health Cloud{% endblock %}</title>
+	
+    {% block css %}
+    	{% include 'core/css.html' %}
+    {% endblock %}
+	
+    {% block additional_css %}
+    {% endblock %}
+</head>
+
+{% endblock %}
+
+	<body>
+		<div id="wrapper" class="gray-bg">
+			{% block header %}
+	    		{% include 'core/header.html' %}
+	    	{% endblock %}
+		
+			{% block menu %}
+				{% include 'core/menu.html' %}
+			{% endblock %}
+		
+			<div id="page-wrapper" class="gray-bg">
+				<div class="wrapper wrapper-content">
+					{% block content %}
+					{% endblock %}
+				</div>
+			
+				{% block footer %}
+        		<div class="footer">
+            		{% include 'core/footer.html' %}
+        		</div>
+				{% endblock %}
+		
+			</div>
+			
+			{% block sidebar %}
+			<div id="right-sidebar">
+				<div class="sidebar-container">
+                
+					{% block sidebar-tab-headers %}
+					{% endblock %}
+					
+					{% block sidebar-tab-content %}
+					{% endblock %}
+				</div>
+			</div>
+			{% endblock %}
+		
+		</div>
+		
+		{% block javascript %}
+    		{% include 'core/javascript.html' %}
+		{% endblock %}
+		
+		{% block additional_js %}
+		{% endblock %}
+		
+	</body>
+</html>

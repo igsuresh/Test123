@@ -1,0 +1,38 @@
+{% load staticfiles %}
+
+<nav class="navbar-default navbar-static-side" role="navigation">
+	<div class="sidebar-collapse">
+		<ul class="nav metismenu" id="side-menu">
+			<li>&nbsp;</li>
+			<li {% if menuHighlight = "dashboard" %}class="active"{% endif %}>
+				<a href="{% url 'portal-dashboard' %}"><i class="fa fa-dashboard"></i> <span class="nav-label">Dashboard</span></a>
+			</li>
+			
+			<li {% if menuHighlight = "fitness" %}class="active"{% endif %}>
+				<a href="{% url 'portal-fitness' %}"><i class="fa fa-bicycle"></i> <span class="nav-label">Fitness &amp; Routine</span></a>
+			</li>
+			
+			<li {% if menuHighlight = "nutrition" %}class="active"{% endif %}>
+				<a href="#"><i class="fa fa-coffee"></i> <span class="nav-label">Nutrition</span></a>
+			</li>
+			
+			<li {% if menuHighlight = "sleep" %}class="active"{% endif %}>
+				<a href="#"><i class="fa fa-moon-o"></i> <span class="nav-label">Sleep</span></a>
+			</li>
+			
+			<li {% if menuHighlight = "biometrics" %}class="active"{% endif %}>
+				<a href="#"><i class="fa fa-stethoscope"></i> <span class="nav-label">Biometrics &amp; Weight</span></a>
+			</li>
+			
+			<li {% if menuHighlight = "diabetes" %}class="active"{% endif %}>
+				<a href="#"><i class="fa fa-medkit"></i> <span class="nav-label">Diabetes</span></a>
+			</li>
+			
+			
+			<li><a href="{{deviceConnectionURL}}" target="_blank"><i class="fa fa-cubes"></i> <span class="nav-label">Devices &amp; Apps</span></a></li>
+			
+			
+			
+		</ul>
+	</div>
+</nav>

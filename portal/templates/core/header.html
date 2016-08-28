@@ -1,0 +1,37 @@
+{% load staticfiles %}
+
+<div class="row border-bottom">
+	<nav class="navbar navbar-static-top gray-bg" role="navigation" style="margin-bottom: 0">
+		<div class="navbar-header">
+				<a class="navbar-minimalize minimalize-styl-2 btn" href="#"><i class="fa fa-bars"></i> </a>
+				<a class="minimalize-styl-2" href="{% url 'portal-dashboard' %}"><img alt="Personal Health Cloud" src="{% static 'img/logo-wide.png' %}"></a>
+		</div>
+		
+		
+		
+		<ul class="nav navbar-top-links navbar-right">
+			
+			<li {% if menuHighlight = "profile" %}class="active"{% endif %}>
+				
+				{% if profile.gender == "F" %}
+				<a href="{% url 'users-profile' %}"><i class="fa fa-female"></i> <span class="nav-label">Profile</span></a>
+				
+				{% else %}
+				
+				<a href="{% url 'users-profile' %}"><i class="fa fa-male"></i> <span class="nav-label">Profile</span></a>
+				{% endif %}
+			</li>
+			|
+			<li><a href="{% url 'users-logout' %}"><i class="fa fa-sign-out"></i> <span class="nav-label">Logout</span></a></li>
+			
+			
+			{% comment %}
+			
+			<li><a class="right-sidebar-toggle"><i class="fa fa-tasks"></i></a></li>
+			
+			{% endcomment %}
+		</ul>
+		
+		
+	</nav>
+</div>
