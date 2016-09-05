@@ -53,7 +53,7 @@ def profileEdit(request):
 
 @login_required
 def profileUpdateGeneral(request):
-    template = 'users/profile-edit.html'
+    template = 'users/profile-view.html'
     
     billing = None
     

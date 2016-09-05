@@ -79,6 +79,8 @@ Personal Health Cloud | Fitness
 									<div class="col-lg-2">
 										<h2>
 											{% if profile.address1 %}{{profile.address1}}{% endif%} {% if profile.address2 %}, {{profile.address2}}{% endif %}
+										</h2>
+										<h2>
 											{% if profile.city %}{{profile.city}}{% endif %} {% if profile.state %}{{profile.state.name_long}}{% endif %} {% if profile.zipcode %}{{profile.zipcode}}{% endif %}
 										</h2>
 									</div>

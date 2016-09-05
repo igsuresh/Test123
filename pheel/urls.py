@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from portal.views import dashboard
+from portal.views import dashboard, fitnessView
 from users.views import signin
 
 
@@ -24,5 +24,5 @@ urlpatterns = [
     url(r'^users/', include('users.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^accounts/login/$', signin, name='login'),
-    url(r'^$', dashboard, name='dashboard'),
+    url(r'^$', fitnessView, name='dashboard'),
 ]

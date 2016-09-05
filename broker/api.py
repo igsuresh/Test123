@@ -151,14 +151,18 @@ class oFitness(oDataObject):
     dataType = "fitness"
     
     def storeUpdate(self,record,last_updated,source):
+        activityCategory = ActivityCategory.objects.get_or_create(name=record['activity_category'])
+        activityType = ActivityType.objects.get_or_create(name=record['activity_type'])
+        intensity = Intensity.objects.get_or_create(name=record['intensity'])
+        
         self.model.objects.filter(pk=id).update(
                                                 timestamp = fixTime(record['timestamp'],record['utc_offset']),
                                                 last_updated = last_updated,
                                                 source = source,
                                                 validated = record['validated'],
-                                                activity_category = record['activity_category'],
-                                                activity_type = record['activity_type'],
-                                                intensity = record['intensity'],
+                                                activity_category = activityCategory,
+                                                activity_type = activityType,
+                                                intensity = intensity,
                                                 start_time = fixTime(record['start_time']),
                                                 distance = record['distance'],
                                                 duration = record['duration'],
@@ -166,6 +170,10 @@ class oFitness(oDataObject):
                                             )
     
     def storeCreateInst(self,record,id,last_updated,source,profile):
+        activityCategory = ActivityCategory.objects.get_or_create(name=record['activity_category'])
+        activityType = ActivityType.objects.get_or_create(name=record['activity_type'])
+        intensity = Intensity.objects.get_or_create(name=record['intensity'])
+        
         return self.model(
                                 id = id,
                                 timestamp = fixTime(record['timestamp'],record['utc_offset']),
@@ -174,9 +182,9 @@ class oFitness(oDataObject):
                                 user = profile.user,
                                 profile = profile,
                                 validated = record['validated'],
-                                activity_category = record['activity_category'],
-                                activity_type = record['activity_type'],
-                                intensity = record['intensity'],
+                                activity_category = activityCategory,
+                                activity_type = activityType,
+                                intensity = intensity,
                                 start_time = fixTime(record['start_time']),
                                 distance = record['distance'],
                                 duration = record['duration'],

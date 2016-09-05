@@ -1,0 +1,67 @@
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h3>Distance &amp; Elevation</h3>
+				</div>
+				
+				<div class="ibox-content">
+					<div class="row">
+						{% if stepsByApp or distanceByActivity or elevation%}
+						
+						<div class='col-lg-4'>
+							{% if stepsByApp %}
+							
+							<div id="line-duration-steps" ></div>
+							<br>
+							<h4 align="center">Steps by Application/Device</h4>
+							
+							{% else %}
+							
+							<br><br><br><br><br><br><br><br>
+							<h3><center>No step activity for this period</center></h3>
+							
+							{% endif %}
+						</div>
+						
+						<div class='col-lg-4'>
+							{% if distanceByActivity %}
+							
+							<div id="line-distance-activity" ></div>
+							<br>
+							<h4 align="center">Distance by Activity</h4>
+							
+							{% else %}
+							
+							<br><br><br><br><br><br><br><br>
+							<h3><center>No distance activity for this period</center></h3>
+							
+							{% endif %}
+						</div>
+						
+						<div class='col-lg-4'>
+							{% if elevation %}
+							<div id="line-duration-elevation" ></div>
+							<br>
+							<h4 align="center">Elevation</h4>
+							
+							{% else %}
+							
+							<br><br><br><br><br><br><br><br>
+							<h3><center>No elevation activity for this period</center></h3>
+							
+							{% endif %}
+						</div>
+						
+						{% else %}
+						
+						<br>
+						<h2><center>No activity for this period, or you haven't connected any devices yet!</center></h2>
+						
+						{% endif %}
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>

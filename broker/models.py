@@ -15,6 +15,24 @@ class Source(models.Model):
     def __unicode__(self):
         return u'%s' % (self.source)
 
+class Intensity(models.Model):
+    name = models.CharField(max_length=100)
+    
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
+class ActivityCategory(models.Model):
+    name = models.CharField(max_length=100)
+    
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
+class ActivityType(models.Model):
+    name = models.CharField(max_length=100)
+    
+    def __unicode__(self):
+        return u'%s' % (self.name)
+
 class DataObject(models.Model):
     id = models.CharField(primary_key=True,max_length=100,db_index=True, editable=False)
     timestamp = models.DateTimeField(db_index=True)
@@ -34,10 +52,9 @@ class DataObject(models.Model):
         return u'%s %s | %s | %s' % (self.user.first_name, self.user.last_name, self.timestamp, self.id)
 
 class Fitness(DataObject):
-    activity_category = models.CharField(max_length=100,null=True,blank=True)
-    activity_type = models.CharField(max_length=100,null=True,blank=True)
-    
-    intensity = models.CharField(max_length=100,null=True,blank=True)
+    activity_category = models.ForeignKey(ActivityCategory)
+    activity_type = models.ForeignKey(ActivityType)
+    intensity = models.ForeignKey(Intensity)
     start_time = models.DateTimeField()
     distance = models.DecimalField(max_digits=9,decimal_places=2)
     duration = models.DecimalField(max_digits=12,decimal_places=2)

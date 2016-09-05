@@ -1,0 +1,150 @@
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h3>Intensity &amp; Category by Duration</h3>
+					
+					<div class="ibox-tools">
+					</div>
+				</div>
+				
+				<div class="ibox-content">
+					<div class="row">
+						
+						{% if activityByIntensity.duration or activityByCategory.duration or cumActivity.duration %}
+						
+						<div class='col-lg-3'>
+							
+							{% if activityByIntensity.duration %}
+							
+							<div id="donut-duration-intensity" ></div>
+							<br>
+							<h4 align="center">Activity Intensity by Duration</h4>
+							
+							{% else %}
+							
+							<br><br>
+							<h3><center>No intensity/duration records this period</center></h3>
+							
+							{% endif %}
+							
+						</div>
+	
+						<div class='col-lg-3'>
+							
+							{% if activityByCategory.duration %}
+							
+							<div id="donut-duration-activity" ></div>
+							<br>
+							<h4 align="center">Activity Category By Duration</h4>
+							
+							{% else %}
+							
+							<br><br>
+							<h3><center>No category/duration records this period</center></h3>
+							
+							{% endif %}
+							
+						</div>
+						
+						<div class='col-lg-6'>
+							
+							{% if cumActivity.duration %}
+							
+							<div id="area-duration-activity" ></div>
+							<br>
+							<h4 align="center">Cummulative Activity By Duration</h4>
+							
+							{% else %}
+							
+							<br><br>
+							<h3><center>No duration records this period</center></h3>
+							
+							{% endif %}
+						</div>
+						
+						{% else %}
+						
+						<br>
+						<h2><center>No activity duration for this period, or you haven't connected any devices yet!</center></h2>
+						
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h3>Calorie Expenditure By Intensity &amp; Category</h3>
+				</div>
+				
+				<div class="ibox-content">
+					<div class="row">
+						
+						{% if activityByIntensity.calories or activityByCategory.calories or cumActivity.calories %}
+						
+						<div class='col-lg-3'>
+							
+							{% if activityByIntensity.calories %}
+							
+							<div id="donut-calories-intensity" ></div>
+							<br>
+							<h4 align="center">Calories by Intensity</h4>
+							
+							{% else %}
+							
+							<br><br>
+							<h3><center>No calories/intensity records this period</center></h3>
+							
+							{% endif %}
+						</div>
+					
+						<div class='col-lg-3'>
+							
+							{% if activityByCategory.calories %}
+							
+							<div id="bar-calories-activity" ></div>
+							<br>
+							<h4 align="center">Calories By Category</h4>
+							
+							{% else %}
+							
+							<br><br>
+							<h3><center>No calories/category records this period</center></h3>
+							
+							{% endif %}
+						</div>
+						
+						<div class='col-lg-6'>
+							
+							{% if cumActivity.calories %}
+							
+							<div id="area-calories-intensity" ></div>
+							<br>
+							<h4 align="center">Calorie Expenditure - Cummulative</h4>
+							
+							{% else %}
+							
+							<br><br>
+							<h3><center>No calorie records this period</center></h3>
+							
+							{% endif %}
+							
+						</div>
+						
+						{% else %}
+						
+						<br>
+						<h2><center>No calorie activity for this period, or you haven't connected any devices yet!</center></h2>
+						
+						{% endif %}
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
