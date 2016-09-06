@@ -11,7 +11,7 @@
 		
 		<ul class="nav navbar-top-links navbar-right">
 			
-			<li {% if menuHighlight = "profile" %}class="active"{% endif %}>
+			<li {% if menuHighlight == "profile" %}class="active"{% endif %}>
 				
 				{% if profile.gender == "F" %}
 				<a href="{% url 'users-profile' %}"><i class="fa fa-female"></i> <span class="nav-label">Profile</span></a>

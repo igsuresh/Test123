@@ -32,7 +32,7 @@ def profileView(request):
         'billing' : billing
     }
     
-    return cRender(template,params,request)
+    return render(request,template,params)
 
 @login_required
 def profileEdit(request):
@@ -49,7 +49,7 @@ def profileEdit(request):
         'states' : State.objects.all().order_by('name_short')
     }
     
-    return cRender(template,params,request)
+    return render(request,template,params)
 
 @login_required
 def profileUpdateGeneral(request):
@@ -72,7 +72,7 @@ def profileUpdateGeneral(request):
         city = request.POST['city']
         state = None
         
-        if State.objects.filter(id=request.POST['state']).exists():
+        if isinstance(request.POST['state'],int) and State.objects.filter(id=request.POST['state']).exists():
             state = State.objects.get(id=request.POST['state'])
         
         zipcode = request.POST['zipcode']
@@ -103,7 +103,7 @@ def profileUpdateGeneral(request):
         'billing' : billing
     }
     
-    return cRender(template,params,request)
+    return render(request,template,params)
 
 @login_required
 def profileUpdatePassword(request):
@@ -132,13 +132,13 @@ def profileUpdatePassword(request):
         'billing' : billing
     }
     
-    return cRender(template,params,request)
+    return render(request,template,params)
 
 def signin(request):
     template = 'users/login.html'
     params = {}
     
-    return cRender(template,params,request)
+    return render(request,template,params)
 
 def actionLogin(request):
     page = 'users-login'
@@ -168,7 +168,7 @@ def register(request):
     
     params = {}
     
-    return cRender(template,params,request)
+    return render(request,template,params)
 
 def actionRegister(request):
     page = 'users-register'
@@ -247,7 +247,7 @@ def actionRegister(request):
     
     print params['msg']
     
-    return cRedirect(page, {})
+    return redirect(page)
     
     
 @login_required

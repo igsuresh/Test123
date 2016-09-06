@@ -1,17 +1,17 @@
 import calendar, json, urllib, csv
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
-from django.shortcuts import render_to_response, redirect
+from django.shortcuts import render, redirect
 from django.template import RequestContext, Context
 
 from datetime import datetime,timedelta, tzinfo
 
 def cRender(template,params,request=None):
 	if request:
-		return render_to_response(template,params,context_instance=RequestContext(request))
+		return render(request,template,params)
 	
 	else:
-		return render_to_response(template,params)
+		return render(template,params)
 	
 def cRedirect(name,params):
 	return redirect(reverse(name,args=params))

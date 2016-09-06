@@ -24,7 +24,7 @@ def dashboard(request):
                 'deviceConnectionURL' : "https://app.validic.com/%s/%s" % (SETTINGS.VALIDIC_ID,profile.validic_access_token)
             }
     
-    return cRender(template,params,request)
+    return render(request,template,params)
 
 @login_required
 def fitnessView(request):
@@ -244,7 +244,7 @@ def fitnessView(request):
                 'cumActivity' : cumActivity,
             }
     
-    return cRender(template,params,request)
+    return render(request,template,params)
 
 @login_required
 def fitnessUpdate(request):
@@ -276,7 +276,7 @@ def fitnessUpdate(request):
         while allUpdates.getNext():
             allUpdates.store()
     
-    return cRedirect(page,{})
+    return redirect(page)
 
 @login_required
 def deviceManagement(request):

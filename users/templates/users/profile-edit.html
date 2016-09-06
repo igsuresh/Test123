@@ -121,7 +121,7 @@ Personal Health Cloud | Fitness
 														<option id="0" selected>State</option>
 														
 														{% for state in states %}
-														<option id={{state.id}} value="{{state.id}}" {% if profile.state = state %}selected{% endif %}>{{state.name_short}}</option>
+														<option id={{state.id}} value="{{state.id}}" {% if profile.state == state %}selected{% endif %}>{{state.name_short}}</option>
 														{% endfor %}
 														
 													</select>
