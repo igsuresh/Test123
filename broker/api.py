@@ -65,8 +65,6 @@ class oDataObject():
             if v:
                 payload[k] = v
         
-        print url
-        
         self.response = requests.get(url, params=payload,headers=headers)
     
     def getPrevious(self):

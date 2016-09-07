@@ -46,13 +46,7 @@ def fixTime(t,u_str):
     
     naive = datetime.strptime(fixed[:-6],"%Y-%m-%dT%H:%M:%S")
     
-    print "Naive time is: ", naive
-    
     offset_str = u_str.replace(":","")
-    
-    print "OFFSET STR IS: ", offset_str
-    
-    print "OFFSET STR CONSIDERED IS: ", offset_str[-4:-2], offset_str[-2:]
     
     offset = int(offset_str[-4:-2]) * 60 + int(offset_str[-2:])
     

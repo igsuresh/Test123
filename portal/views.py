@@ -43,8 +43,11 @@ def fitnessView(request):
         if each not in request.GET.keys():
             custom = False
             break
-        else:
+        elif isinstance(request.GET['each'],int):
             constraints[each] = int(request.GET[each])
+        else:
+            custom=False
+            break
     
     if custom:
         start = datetime.date(constraints['fy'],constraints['fm'],constraints['fd'])
@@ -261,7 +264,6 @@ def fitnessUpdate(request):
     
     if Routine.objects.filter(user=request.user).exists():
         previousRoutine = Routine.objects.filter(user=request.user,timestamp__isnull=False).latest('timestamp').timestamp.strftime("%Y-%m-%dT%H:%M:%S") + tzOffset
-    
     
     updates.append(oFitness(user=request.user,startDate=previousFitness,endDate=datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S") + tzOffset))
     
