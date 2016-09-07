@@ -53,8 +53,8 @@ class DataObject(models.Model):
 
 class Fitness(DataObject):
     activity_category = models.ForeignKey(ActivityCategory)
-    activity_type = models.ForeignKey(ActivityType, null=True)
-    intensity = models.ForeignKey(Intensity, null=True)
+    activity_type = models.ForeignKey(ActivityType)
+    intensity = models.ForeignKey(Intensity)
     start_time = models.DateTimeField()
     distance = models.DecimalField(max_digits=9,decimal_places=2)
     duration = models.DecimalField(max_digits=12,decimal_places=2)
