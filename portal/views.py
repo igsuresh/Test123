@@ -43,10 +43,10 @@ def fitnessView(request):
         if each not in request.GET.keys():
             custom = False
             break
-        elif isinstance(request.GET[each],int):
+        elif request.GET[each] and request.GET[each].isdigit():
             constraints[each] = int(request.GET[each])
         else:
-            custom=False
+            custom = False
             break
     
     if custom:
