@@ -58,14 +58,14 @@ def fitnessView(request):
     
     # STAT BOX INFO
     
-    dailyDistance = Routine.objects.filter(timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('distance'))['distance__sum']
-    dailySteps = Routine.objects.filter(timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('steps'))['steps__sum']
-    dailyDuration = Fitness.objects.filter(timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('duration'))['duration__sum']
+    dailyDistance = Routine.objects.filter(user=request.user,timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('distance'))['distance__sum']
+    dailySteps = Routine.objects.filter(user=request.user,timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('steps'))['steps__sum']
+    dailyDuration = Fitness.objects.filter(user=request.user,timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('duration'))['duration__sum']
     
-    dailyFloors = Routine.objects.filter(timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('floors'))['floors__sum']
-    dailyElevation = Routine.objects.filter(timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('elevation'))['elevation__sum']
+    dailyFloors = Routine.objects.filter(user=request.user,timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('floors'))['floors__sum']
+    dailyElevation = Routine.objects.filter(user=request.user,timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('elevation'))['elevation__sum']
     
-    dailyCalories = Routine.objects.filter(timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('calories'))['calories__sum']
+    dailyCalories = Routine.objects.filter(user=request.user,timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('calories'))['calories__sum']
     
     dailyStats = {
                 'distance' : int(math.ceil(dailyDistance)) if dailyDistance else 0,
@@ -82,8 +82,8 @@ def fitnessView(request):
     
     # DISTANCE & ELEVATION
     
-    routine = Routine.objects.filter(profile__user=request.user,timestamp__gte=startTime,timestamp__lte=endTime)
-    fitness = Fitness.objects.filter(profile__user=request.user,timestamp__gte=startTime,timestamp__lte=endTime)
+    routine = Routine.objects.filter(user=request.user,timestamp__gte=startTime,timestamp__lte=endTime)
+    fitness = Fitness.objects.filter(user=request.user,timestamp__gte=startTime,timestamp__lte=endTime)
     
     stepsByApp = {}
     stepsByAppSources = []

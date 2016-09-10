@@ -149,20 +149,18 @@ class oFitness(oDataObject):
     dataType = "fitness"
     
     def storeUpdate(self,record,last_updated,source):
-        if 'activity_category' in record.keys():
+        activityCategory = ActivityCategory.objects.get_or_create(name="Other")
+        activityType = ActivityType.objects.get_or_create(name="Other")
+        intensity = Intensity.objects.get_or_create(name="Other")
+        
+        if 'activity_category' in record.keys() and record['activity_category']:
             activityCategory = ActivityCategory.objects.get_or_create(name=record['activity_category'])
-        else:
-            activityCategory = ActivityCategory.objects.get_or_create(name="Other")
         
-        if 'activity_type' in record.keys():
+        if 'activity_type' in record.keys() and record['activiy_type']:
             activityType = ActivityType.objects.get_or_create(name=record['activity_type'])
-        else:
-            activityType = ActivityType.objects.get_or_create(name="Other")
         
-        if 'intensity' in record.keys():
+        if 'intensity' in record.keys() and record['intensity']:
             intensity = Intensity.objects.get_or_create(name=record['intensity'])
-        else:
-            intensity = Intensity.objects.get_or_create(name="Other")
         
         self.model.objects.filter(pk=id).update(
                                                 timestamp = fixTime(record['timestamp'],record['utc_offset']),
@@ -179,20 +177,18 @@ class oFitness(oDataObject):
                                             )
     
     def storeCreateInst(self,record,id,last_updated,source,profile):
-        if 'activity_category' in record.keys():
+        activityCategory = ActivityCategory.objects.get_or_create(name="Other")
+        activityType = ActivityType.objects.get_or_create(name="Other")
+        intensity = Intensity.objects.get_or_create(name="Other")
+        
+        if 'activity_category' in record.keys() and record['activity_category']:
             activityCategory = ActivityCategory.objects.get_or_create(name=record['activity_category'])
-        else:
-            activityCategory = ActivityCategory.objects.get_or_create(name="Other")
         
-        if 'activity_type' in record.keys():
+        if 'activity_type' in record.keys() and record['activiy_type']:
             activityType = ActivityType.objects.get_or_create(name=record['activity_type'])
-        else:
-            activityType = ActivityType.objects.get_or_create(name="Other")
         
-        if 'intensity' in record.keys():
+        if 'intensity' in record.keys() and record['intensity']:
             intensity = Intensity.objects.get_or_create(name=record['intensity'])
-        else:
-            intensity = Intensity.objects.get_or_create(name="Other")
         
         return self.model(
                                 id = id,
