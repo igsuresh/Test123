@@ -170,7 +170,7 @@ class oFitness(oDataObject):
                                                 activity_category = activityCategory,
                                                 activity_type = activityType,
                                                 intensity = intensity,
-                                                start_time = fixTime(record['start_time']),
+                                                start_time = fixTime(record['start_time'],record['utc_offset']),
                                                 distance = record['distance'],
                                                 duration = record['duration'],
                                                 calories = record['calories']
@@ -201,7 +201,7 @@ class oFitness(oDataObject):
                                 activity_category = activityCategory,
                                 activity_type = activityType,
                                 intensity = intensity,
-                                start_time = fixTime(record['start_time']),
+                                start_time = fixTime(record['start_time'],record['utc_offset']),
                                 distance = record['distance'],
                                 duration = record['duration'],
                                 calories = record['calories']

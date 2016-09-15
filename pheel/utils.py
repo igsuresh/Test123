@@ -41,10 +41,10 @@ class FixedOffset(tzinfo):
     def __repr__(self):
         return 'FixedOffset(%d)' % (self.utcoffset().total_seconds() / 60)
 
-def fixTime(u_str):
-    #fixed = u_str
+def fixTime(t,u_str=None):
+    fixed = u_str
     
-    #naive = datetime.strptime(fixed[:-6],"%Y-%m-%dT%H:%M:%S")
+    naive = datetime.strptime(fixed[:-6],"%Y-%m-%dT%H:%M:%S")
     
     offset_str = u_str.replace(":","")
     
