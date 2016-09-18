@@ -149,9 +149,9 @@ class oFitness(oDataObject):
     dataType = "fitness"
     
     def storeUpdate(self,record,last_updated,source):
-        activityCategory = ActivityCategory.objects.get_or_create(name="Other")
-        activityType = ActivityType.objects.get_or_create(name="Other")
-        intensity = Intensity.objects.get_or_create(name="Other")
+        activityCategory, status = ActivityCategory.objects.get_or_create(name="Other")
+        activityType, status = ActivityType.objects.get_or_create(name="Other")
+        intensity, status = Intensity.objects.get_or_create(name="Other")
         
         if 'activity_category' in record.keys() and record['activity_category']:
             activityCategory, status = ActivityCategory.objects.get_or_create(name=record['activity_category'])
@@ -177,9 +177,9 @@ class oFitness(oDataObject):
                                             )
     
     def storeCreateInst(self,record,id,last_updated,source,profile):
-        activityCategory = ActivityCategory.objects.get_or_create(name="Other")
-        activityType = ActivityType.objects.get_or_create(name="Other")
-        intensity = Intensity.objects.get_or_create(name="Other")
+        activityCategory, status = ActivityCategory.objects.get_or_create(name="Other")
+        activityType, status = ActivityType.objects.get_or_create(name="Other")
+        intensity, status = Intensity.objects.get_or_create(name="Other")
         
         if 'activity_category' in record.keys() and record['activity_category']:
             activityCategory, status = ActivityCategory.objects.get_or_create(name=record['activity_category'])
