@@ -154,13 +154,13 @@ class oFitness(oDataObject):
         intensity = Intensity.objects.get_or_create(name="Other")
         
         if 'activity_category' in record.keys() and record['activity_category']:
-            activityCategory = ActivityCategory.objects.get_or_create(name=record['activity_category'])
+            activityCategory, status = ActivityCategory.objects.get_or_create(name=record['activity_category'])
         
         if 'activity_type' in record.keys() and record['activiy_type']:
-            activityType = ActivityType.objects.get_or_create(name=record['activity_type'])
+            activityType, status = ActivityType.objects.get_or_create(name=record['activity_type'])
         
         if 'intensity' in record.keys() and record['intensity']:
-            intensity = Intensity.objects.get_or_create(name=record['intensity'])
+            intensity, status = Intensity.objects.get_or_create(name=record['intensity'])
         
         self.model.objects.filter(pk=id).update(
                                                 timestamp = fixTime(record['timestamp'],record['utc_offset']),
@@ -182,13 +182,13 @@ class oFitness(oDataObject):
         intensity = Intensity.objects.get_or_create(name="Other")
         
         if 'activity_category' in record.keys() and record['activity_category']:
-            activityCategory = ActivityCategory.objects.get_or_create(name=record['activity_category'])
+            activityCategory, status = ActivityCategory.objects.get_or_create(name=record['activity_category'])
         
         if 'activity_type' in record.keys() and record['activiy_type']:
-            activityType = ActivityType.objects.get_or_create(name=record['activity_type'])
+            activityType, status = ActivityType.objects.get_or_create(name=record['activity_type'])
         
         if 'intensity' in record.keys() and record['intensity']:
-            intensity = Intensity.objects.get_or_create(name=record['intensity'])
+            intensity, status = Intensity.objects.get_or_create(name=record['intensity'])
         
         return self.model(
                                 id = id,
