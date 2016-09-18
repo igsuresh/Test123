@@ -42,7 +42,8 @@ class FixedOffset(tzinfo):
         return 'FixedOffset(%d)' % (self.utcoffset().total_seconds() / 60)
 
 def fixTime(t,u_str=None):
-    fixed = u_str
+    
+    fixed = t
     
     naive = datetime.strptime(fixed[:-6],"%Y-%m-%dT%H:%M:%S")
     
