@@ -14,7 +14,7 @@ from pheel.utils import *
 from broker.models import *
 from users.models import *
 
-import datetime, json, requests
+import datetime, json, numbers, requests
 
 class oDataObject():
     access_token = SETTINGS.VALIDIC_KEY
@@ -171,7 +171,7 @@ class oFitness(oDataObject):
                                                 activity_type = activityType,
                                                 intensity = intensity,
                                                 start_time = fixTime(record['start_time'],record['utc_offset']),
-                                                distance = record['distance'],
+                                                distance = record['distance'] if (isinstance(record['distance'],numbers.Number)) else 0,
                                                 duration = record['duration'],
                                                 calories = record['calories']
                                             )
@@ -202,7 +202,7 @@ class oFitness(oDataObject):
                                 activity_type = activityType,
                                 intensity = intensity,
                                 start_time = fixTime(record['start_time'],record['utc_offset']),
-                                distance = record['distance'],
+                                distance = record['distance'] if (isinstance(record['distance'],numbers.Number)) else 0,
                                 duration = record['duration'],
                                 calories = record['calories']
                             )

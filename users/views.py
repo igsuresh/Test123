@@ -17,35 +17,13 @@ from users.models import *
 
 import csv, datetime, os, requests
 
-
 @login_required
-def profileView(request):
-    template = 'users/profile-view.html'
-    
-    billing = None
-    
-    if Billing.objects.filter(user=request.user).exists():
-        billing = Billing.objects.get(user=request.user)
-    
-    params = {
-        'profile' : Profile.objects.get(user=request.user),
-        'billing' : billing
-    }
-    
-    return render(request,template,params)
-
-@login_required
-def profileEdit(request):
+def profileEditGeneral(request):
     template = 'users/profile-edit.html'
     
-    billing = None
-    
-    if Billing.objects.filter(user=request.user).exists():
-        billing = Billing.objects.get(user=request.user)
-    
     params = {
+        'menuHighlight' : "general",
         'profile' : Profile.objects.get(user=request.user),
-        'billing' : billing,
         'states' : State.objects.all().order_by('name_short')
     }
     
@@ -53,26 +31,19 @@ def profileEdit(request):
 
 @login_required
 def profileUpdateGeneral(request):
-    template = 'users/profile-view.html'
-    
-    billing = None
-    
-    if Billing.objects.filter(user=request.user).exists():
-        billing = Billing.objects.get(user=request.user)
+    template = 'users/profile-edit.html'
     
     if request.method == "POST":
         firstName = request.POST['firstName']
         lastName = request.POST['lastName']
         dob = datetime.datetime.strptime(request.POST['dob'], "%m/%d/%Y").strftime("%Y-%m-%d")
         
-        
-        
         address1 = request.POST['address1']
         address2 = request.POST['address2']
         city = request.POST['city']
         state = None
         
-        if isinstance(request.POST['state'],int) and State.objects.filter(id=request.POST['state']).exists():
+        if request.POST['state'] and State.objects.filter(id=request.POST['state']).exists():
             state = State.objects.get(id=request.POST['state'])
         
         zipcode = request.POST['zipcode']
@@ -99,20 +70,26 @@ def profileUpdateGeneral(request):
         )
     
     params = {
+        'menuHighlight' : "general",
         'profile' : Profile.objects.get(user=request.user),
-        'billing' : billing
+        'states' : State.objects.all().order_by('name_short')
     }
     
     return render(request,template,params)
 
 @login_required
-def profileUpdatePassword(request):
-    template = 'users/profile-edit.html'
+def profilePasswordChange(request):
+    template = 'users/password-change.html'
     
-    billing = None
+    params = {
+        'menuHighlight' : "password",
+    }
     
-    if Billing.objects.filter(user=request.user).exists():
-        billing = Billing.objects.get(user=request.user)
+    return render(request,template,params)
+
+@login_required
+def profilePasswordUpdate(request):
+    template = 'users/password-change.html'
     
     if request.method == "POST":
         currentPass = request.POST['currentPass']
@@ -128,8 +105,8 @@ def profileUpdatePassword(request):
             login(request, user)
     
     params = {
-        'profile' : Profile.objects.get(user=request.user),
-        'billing' : billing
+        'menuHighlight' : "password",
+        'profile' : Profile.objects.get(user=request.user)
     }
     
     return render(request,template,params)
@@ -234,13 +211,10 @@ def actionRegister(request):
                         if u is not None:
                             login(request,u)
                         
-                            print "Success!"
-                        
                         page = 'users-profile-edit'
                     
                 else:
                     params['msg'] = "Validic user creation failed"
-                    print r.text
             
             else:
                 params['msg'] = "Email already in use"

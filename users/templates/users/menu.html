@@ -1,0 +1,16 @@
+{% load staticfiles %}
+
+<nav class="navbar-default navbar-static-side" role="navigation">
+	<div class="sidebar-collapse">
+		<ul class="nav metismenu" id="side-menu">
+			<li {% if menuHighlight == "general" %}class="active"{% endif %}>
+				<a href="{% url 'users-profile' %}"><i class="fa fa-icon-user"></i> <span class="nav-label">General</span></a>
+			</li>
+			
+			<li {% if menuHighlight == "password" %}class="active"{% endif %}>
+				<a href="{% url 'users-profile-password-change' %}"><i class="fa fa-key"></i> <span class="nav-label">Change Password</span></a>
+			</li>
+			
+		</ul>
+	</div>
+</nav>

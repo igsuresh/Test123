@@ -69,12 +69,12 @@ def fitnessView(request):
     
     dailyStats = {
                 'distance' : int(math.ceil(dailyDistance)) if dailyDistance else 0,
-                'distanceMiles' : int(math.ceil(float(dailyDistance)/(1.6 * 1000))) if dailyDistance else 0,
+                'distanceMiles' : round(float(dailyDistance)/(1600),2) if dailyDistance else 0,
                 'steps' : int(math.ceil(dailySteps)) if dailySteps else 0,
                 
-                'duration' : int(math.ceil(dailyDuration)) if dailyDuration else 0,
+                'duration' : round(dailyDuration/3600,2) if dailyDuration else 0,
                 
-                'floors' : int(math.ceil(dailyFloors)) if dailyFloors else 0,
+                'floors' : roun(dailyFloors,1) if dailyFloors else 0,
                 'elevation' : int(math.ceil(dailyElevation)) if dailyElevation else 0,
                 
                 'calories' : int(math.ceil(dailyCalories)) if dailyCalories else 0
@@ -103,14 +103,14 @@ def fitnessView(request):
             stepsByAppSources.append(activity.source.source_name)
         
         if (activity.timestamp.date() not in stepsByApp.keys()) and (activity.steps > 0):
-            stepsByApp[activity.timestamp.date()] = {activity.source.source_name : activity.steps}
+            stepsByApp[activity.timestamp.date()] = {activity.source.source_name : int(math.ceil(activity.steps))}
         
         elif activity.steps > 0:
             if activity.source.source_name in stepsByApp[activity.timestamp.date()].keys():
-                stepsByApp[activity.timestamp.date()][activity.source.source_name] += activity.steps
+                stepsByApp[activity.timestamp.date()][activity.source.source_name] += int(math.ceil(activity.steps))
             
             else:
-                stepsByApp[activity.timestamp.date()][activity.source.source_name] = activity.steps
+                stepsByApp[activity.timestamp.date()][activity.source.source_name] = int(math.ceil(activity.steps))
         
         # Distance by activity
         
@@ -225,6 +225,14 @@ def fitnessView(request):
     # REQUIRED VARS & RETURN
     
     profile = Profile.objects.get(user=request.user)
+    
+    for k,v in activityByIntensity['calories'].items():
+        print k,v
+    
+    print "\n\n****\n\n"
+    
+    for k,v in activityByCategory['calories'].items():
+        print k,v
     
     params = {
                 'profile' : profile,
