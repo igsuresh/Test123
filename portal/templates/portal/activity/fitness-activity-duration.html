@@ -1,0 +1,76 @@
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h3>Intensity &amp; Category by Duration</h3>
+					
+					<div class="ibox-tools">
+					</div>
+				</div>
+				
+				<div class="ibox-content">
+					<div class="row">
+						
+						{% if activityByIntensity.duration or activityByCategory.duration or cumActivity.duration %}
+						
+						<div class='col-lg-3'>
+							
+							{% if activityByIntensity.duration %}
+							
+							<div id="donut-duration-intensity" ></div>
+							<br>
+							<h4 align="center">Activity Intensity by Duration</h4>
+							
+							{% else %}
+							
+							<br><br>
+							<h3><center>No intensity/duration records this period</center></h3>
+							
+							{% endif %}
+							
+						</div>
+	
+						<div class='col-lg-3'>
+							
+							{% if activityByCategory.duration %}
+							
+							<div id="donut-duration-activity" ></div>
+							<br>
+							<h4 align="center">Activity Category By Duration</h4>
+							
+							{% else %}
+							
+							<br><br>
+							<h3><center>No category/duration records this period</center></h3>
+							
+							{% endif %}
+							
+						</div>
+						
+						<div class='col-lg-6'>
+							
+							{% if cumActivity.duration %}
+							
+							<div id="area-duration-activity" ></div>
+							<br>
+							<h4 align="center">Cummulative Activity By Duration</h4>
+							
+							{% else %}
+							
+							<br><br>
+							<h3><center>No duration records this period</center></h3>
+							
+							{% endif %}
+						</div>
+						
+						{% else %}
+						
+						<br>
+						<h2><center>No activity duration for this period, or you haven't connected any devices yet!</center></h2>
+						
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>

@@ -18,7 +18,6 @@ urlpatterns = [
     url(r'^logout', signout, name='users-logout'),
     
     url(r'^register/do', actionRegister, name='users-register-action'),
-    
     url(r'^register', register, name='users-register'),
     
     url(r'^$', signin, name='users-login'),

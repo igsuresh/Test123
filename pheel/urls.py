@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
-from portal.views import dashboard, fitnessView
+from portal.views import fitnessView
 from users.views import signin
 
 

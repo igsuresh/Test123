@@ -16,15 +16,15 @@
 				<a href="{% url 'portal-fitness' %}"><i class="fa fa-bicycle"></i> <span class="nav-label">Activity</span></a>
 			</li>
 			
-			{% comment %}
-			
 			<li {% if menuHighlight == "nutrition" %}class="active"{% endif %}>
-				<a href="#"><i class="fa fa-coffee"></i> <span class="nav-label">Nutrition</span></a>
+				<a href="{% url 'portal-nutrition' %}"><i class="fa fa-coffee"></i> <span class="nav-label">Nutrition</span></a>
 			</li>
 			
 			<li {% if menuHighlight == "sleep" %}class="active"{% endif %}>
-				<a href="#"><i class="fa fa-moon-o"></i> <span class="nav-label">Sleep</span></a>
+				<a href="{% url 'portal-sleep' %}"><i class="fa fa-moon-o"></i> <span class="nav-label">Sleep</span></a>
 			</li>
+			
+			{% comment %}
 			
 			<li {% if menuHighlight == "biometrics" %}class="active"{% endif %}>
 				<a href="#"><i class="fa fa-stethoscope"></i> <span class="nav-label">Biometrics &amp; Weight</span></a>

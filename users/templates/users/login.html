@@ -21,7 +21,7 @@
 		<div class="middle-box text-center loginscreen animated fadeInDown">
 			<div>
 				<div>
-					<img class="minimalize-styl-2" alt="Personal Health Cloud" src="{% static 'img/logo-box.png' %}" />
+					<a href="{% url 'users-register' %}"><img class="minimalize-styl-2" alt="Personal Health Cloud" src="{% static 'img/logo-box.png' %}"></a>
 				</div>
 				
 				<br>
@@ -32,6 +32,10 @@
 				<h3>Your health. Your data. Own it.</h3>
 			
 				<br>
+				
+				{% if request.session.error %}
+				<h5><font color="red">{{request.session.error}}</font></h5>
+				{% endif %}
 				
 				<form class="m-t" role="form" method="post" action="{% url 'users-login-action' %}">
 					{% csrf_token %}

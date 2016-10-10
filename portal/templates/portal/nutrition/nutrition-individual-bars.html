@@ -1,0 +1,78 @@
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h3>Calorie, Water &amp; Salt Consumption</h3>
+				</div>
+				
+				<div class="ibox-content">
+					<div class="row">
+						
+						{% if lineCharts.Calories or lineCharts.Water or lineCharts.Sodium %}
+						
+						<div class='col-lg-4'>
+							
+							{% if lineCharts.Calories %}
+							
+							<div id="line-calories" ></div>
+							
+							<br>
+							
+							<h4 align="center">Calories</h4>
+							
+							{% else %}
+							
+							<br><br><br><br>
+							<h3><center>No calorie consumption data for this period</center></h3>
+							
+							{% endif %}
+							
+						</div>
+						
+						<div class='col-lg-4'>
+							
+							{% if lineCharts.Water %}
+							
+							<div id="line-water" ></div>
+							
+							<br>
+							
+							<h4 align="center">Water</h4>
+							
+							{% else %}
+							
+							<br><br><br><br>
+							<h3><center>No water consumption data for this period</center></h3>
+							
+							{% endif %}
+						</div>
+						
+						<div class='col-lg-4'>
+							{% if lineCharts.Sodium %}
+							
+							<div id="line-sodium" ></div>
+							
+							<br>
+							
+							<h4 align="center">Sodium</h4>
+							
+							{% else %}
+							
+							<br><br><br><br>
+							<h3><center>No sodium consumption data for this period</center></h3>
+							
+							{% endif %}
+						</div>
+						
+						{% else %}
+						
+						<br>
+						<h2><center>No nutrition data for this period, or you haven't synced any devices/apps yet!</center></h2>
+						
+						{% endif %}
+						
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>

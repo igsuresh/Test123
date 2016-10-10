@@ -1,10 +1,13 @@
 import calendar, json, urllib, csv
+
+from datetime import datetime,timedelta, tzinfo
+
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.template import RequestContext, Context
 
-from datetime import datetime,timedelta, tzinfo
+from users.models import State
 
 def cRender(template,params,request=None):
 	if request:
@@ -57,3 +60,11 @@ def fixTime(t,u_str=None):
     fixed = naive.replace(tzinfo=FixedOffset(offset))
     
     return fixed
+
+def populateState():
+    with open(os.path.join(SETTINGS.BASE_DIR,'setup','states.csv'),'rb') as fh:
+        reader = csv.reader(fh)
+        
+        for row in reader:
+            print row[0], row[1]
+            State.objects.update_or_create(name_long=row[0],name_short=row[1])

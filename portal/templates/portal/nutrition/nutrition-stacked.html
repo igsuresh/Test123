@@ -1,0 +1,31 @@
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h3>Key Nutrition Statistics</h3>
+				</div>
+				
+				<div class="ibox-content">
+					<div class="row">
+						<div class='col-lg-12'>
+							
+							{% if keyStats %}
+							
+							<div id="area-nutrition-key-stats" ></div>
+							
+							<br>
+							
+							<h4 align="center">Key Nutrition Statistics</h4>
+							
+							{% else %}
+							
+							<br>
+							<h2><center>No nutrition data for this period, or you haven't synced any devices/apps yet!</center></h2>
+							
+							{% endif %}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>

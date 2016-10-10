@@ -1,0 +1,396 @@
+{% load staticfiles %}
+
+<script src="{% static 'js/math.min.js' %}"></script>
+
+<script src="{% static 'js/plugins/datapicker/bootstrap-datepicker.js' %}"></script>
+
+<script src="{% static 'js/plugins/morris/raphael-2.1.0.min.js' %}"></script>
+<script src="{% static 'js/plugins/morris/morris.js' %}"></script>
+
+<script src="{% static 'js/plugins/dataTables/datatables.min.js' %}"></script>
+
+<!-- Page-Level Scripts -->
+<script>
+
+var url ="{% url 'portal-fitness-view' %}?fy={{periodStart.month}}&fd={{periodStart.day}}&fy={{periodStart.year}}&tm={{periodEnd.month}}&td={{periodEnd.day}}&ty={{periodEnd.year}}";
+		
+		var selectFrom = [{{periodStart.month}},{{periodStart.day}},{{periodStart.year}}];
+		
+		var selectTo = [{{periodEnd.month}},{{periodEnd.day}},{{periodEnd.year}}];
+		
+		$('#selectFrom').on('change', function() {
+			selectFrom = this.value.split("/");
+			$("#getURL").attr(
+								"href",
+								"{% url 'portal-fitness-view' %}?fm=" + selectFrom[0] + "&fd=" + selectFrom[1] + "&fy=" + selectFrom[2] + "&tm=" + selectTo[0] + "&td=" + selectTo[1] + "&ty=" + selectTo[2]
+							);
+		});
+		
+		$('#selectTo').on('change', function() {
+			selectTo = this.value.split("/");
+			$("#getURL").attr(
+								"href",
+								"{% url 'portal-fitness-view' %}?fm=" + selectFrom[0] + "&fd=" + selectFrom[1] + "&fy=" + selectFrom[2] + "&tm=" + selectTo[0] + "&td=" + selectTo[1] + "&ty=" + selectTo[2]
+							);
+		});
+		
+		$(function() {
+			
+			{% if stepsByApp %}
+			
+			Morris.Line({
+			    element: 'line-duration-steps',
+			    
+				data: [
+					
+					{% for k,v in stepsByApp.items %}
+						{
+							y: '{{k.year}}-{{k.month}}-{{k.day}}',
+							{% for sourceName, steps in v.items %}
+							
+							'{{sourceName}}' : {{steps}}
+								
+								{% if not forloop.last %},{% endif %}
+							
+							{% endfor %}
+						}
+						
+						{% if not forloop.last %},{% endif %}
+						
+					{% endfor %}
+					
+					{% if not forloop.last %},{% endif %}
+				],
+			    
+				xkey: 'y',
+			    ykeys: [
+						{% for source in stepsByAppSources %}
+						
+						'{{source}}'
+						
+						{% if not forloop.last %},{% endif %}
+						
+						{% endfor %}
+						],
+						
+			    labels: [
+							{% for source in stepsByAppSources %}
+					
+							'{{source}}'
+					
+							{% if not forloop.last %},{% endif %}
+					
+							{% endfor %}
+						],
+			    hideHover: 'auto',
+			    resize: true,
+			    lineColors: ['#54cdb4','#1ab394'],
+			});
+			
+			{% endif %}
+			
+			{% if distanceByActivity %}
+			
+			Morris.Line({
+			    element: 'line-distance-activity',
+			    
+				data: [
+					{% for k,v in distanceByActivity.items %}
+						{
+							y: '{{k.year}}-{{k.month}}-{{k.day}}',
+							{% for activityName, distance in v.items %}
+							
+							'{{activityName}}' : {{distance}}
+								
+								{% if not forloop.last %},{% endif %}
+							
+							{% endfor %}
+						}
+						
+						{% if not forloop.last %},{% endif %}
+						
+					{% endfor %}
+					
+					{% if not forloop.last %},{% endif %}
+				],
+			    
+				xkey: 'y',
+			    ykeys: [
+						{% for source in activitySources %}
+						
+						'{{source}}'
+						
+						{% if not forloop.last %},{% endif %}
+						
+						{% endfor %}
+						],
+						
+			    labels: [
+							{% for source in activitySources %}
+					
+							'{{source}}'
+					
+							{% if not forloop.last %},{% endif %}
+					
+							{% endfor %}
+						],
+			    hideHover: 'auto',
+			    resize: true,
+			    lineColors: ['#54cdb4','#1ab394'],
+			});
+			
+			{% endif %}
+			
+			{% if elevation %}
+			
+		    Morris.Line({
+		        element: 'line-duration-elevation',
+		            data: [
+						{% for k,v in elevation.items %}
+						
+						{ date: '{{k.year}}-{{k.month}}-{{k.day}}', elevation: {{v}} }
+						
+						{% if not forloop.last %},{% endif %}
+						
+						{% endfor %}
+		            ],
+		        xkey: 'date',
+		        ykeys: ['elevation'],
+		        resize: true,
+		        lineWidth:4,
+		        labels: ['Elevation'],
+		        lineColors: ['#1ab394'],
+		        pointSize:5,
+		    });
+			
+			{% endif %}
+			
+			{% if activityByIntensity.duration %}
+			
+			Morris.Donut({
+			    element: 'donut-duration-intensity',
+			    data: [
+						{% for intensity,duration in activityByIntensity.duration.items %}
+						
+						{ label: "{{intensity}}", value: math.round(math.divide({{duration}},60)) },
+						
+						{% if not forloop.last %},{% endif %}
+						
+						{% endfor %}
+					],
+			    resize: true,
+			    colors: ['#8CA838', '#BB573E','#B83D45'],
+			});
+			
+			{% endif %}
+			
+			{% if activityByCategory.duration %}
+		    
+			Morris.Donut({
+		        element: 'donut-duration-activity',
+		        data: [
+						{% for category,duration in activityByCategory.duration.items %}
+					
+						{ label: "{{category}}", value: math.round(math.divide({{duration}},60)) },
+					
+						{% if not forloop.last %},{% endif %}
+					
+						{% endfor %}
+					],
+		        resize: true,
+		        colors: ['#3B5AB0', '#309169','#7ECC66','#CED071','#B83D62','#D581B7','#7E2A58','#581D4B','#71C2D0','#BB3E43'],
+		    });
+			
+			{% endif %}
+			
+			{% if cumActivity.duration %}
+			
+		    Morris.Area({
+		        element: 'area-duration-activity',
+		        data: [
+						
+						{% for period, intensityDuration in cumActivity.duration.items %}
+						
+						{
+							period: '{{period.year}}-{{period.month}}-{{period.day}}',
+							
+							{% for intensity,duration in intensityDuration.items %}
+							
+							'{{intensity}}' : math.round(math.divide({{duration}},60))
+							
+							{% if not forloop.last %},{% endif %}
+							
+							{% endfor %}
+						}
+						
+						{% if not forloop.last %},{% endif %}
+						
+						{% endfor %}
+					],
+		        xkey: 'period',
+		        ykeys: [
+							{% for e in activityByIntensity.duration.keys %}
+						
+							'{{e}}'
+						
+							{% if not forloop.last %},{% endif %}
+							
+							{% endfor %}
+						],
+		        labels: [
+							{% for e in activityByIntensity.duration.keys %}
+					
+							'{{e}}'
+					
+							{% if not forloop.last %},{% endif %}
+					
+							{% endfor %}
+						],
+		        pointSize: 2,
+		        hideHover: 'auto',
+		        resize: true,
+		        lineColors: ['#87d6c6', '#54cdb4','#1ab394'],
+		        lineWidth:2,
+		        pointSize:1,
+		    });
+			
+			{% endif %}
+			
+			
+			{% if activityByIntensity.calories %}
+			
+		    Morris.Donut({
+		        element: 'donut-calories-intensity',
+		        data: [
+						{% for intensity,calories in activityByIntensity.calories.items %}
+					
+						{ label: "{{intensity}}", value: {{calories}} }
+					
+						{% if not forloop.last %},{% endif %}
+					
+						{% endfor %}
+					],
+		        resize: true,
+		        colors: ['#E82C71', '#2CE8A3','#452CE8','#CFE82C'],
+		    });
+			
+			{% endif %}
+			
+			{% if activityByCategory.calories %}
+			
+		    Morris.Bar({
+		        element: 'bar-calories-activity',
+		        data: [
+						{% for category,calories in activityByCategory.calories.items %}
+				
+						{ label: "{{category}}", value: {{calories}} }
+				
+						{% if not forloop.last %},{% endif %}
+				
+						{% endfor %}
+					],
+		        xkey: 'label',
+		        ykeys: ['value'],
+		        labels: ['Calories'],
+		        hideHover: 'auto',
+		        resize: true,
+		        barColors: ['#1ab394', '#cacaca'],
+		    });
+			
+			{% endif %}
+			
+			{% if cumActivity.calories %}
+			
+		    Morris.Area({
+		        element: 'area-calories-intensity',
+		        data: [
+						
+						{% for period, categoryCalories in cumActivity.calories.items %}
+						
+						{
+							period: '{{period.year}}-{{period.month}}-{{period.day}}',
+							
+							{% for category,calories in categoryCalories.items %}
+							
+							'{{category}}' : {{calories}}
+							
+							{% if not forloop.last %},{% endif %}
+							
+							{% endfor %}
+						}
+						
+						{% if not forloop.last %},{% endif %}
+						
+						{% endfor %}
+					],
+		        xkey: 'period',
+		        ykeys: [
+							{% for e in activityByCategory.calories.keys %}
+						
+							'{{e}}'
+						
+							{% if not forloop.last %},{% endif %}
+						
+							{% endfor %}
+						],
+		        labels: [
+							{% for e in activityByCategory.calories.keys %}
+					
+							'{{e}}'
+					
+							{% if not forloop.last %},{% endif %}
+					
+							{% endfor %}
+						],
+		        pointSize: 2,
+		        hideHover: 'auto',
+		        resize: true,
+		        lineColors: ['#87d6c6', '#54cdb4','#1ab394'],
+		        lineWidth:2,
+		        pointSize:1,
+		    });
+			
+			{% endif %}
+			
+		});
+		
+        $(document).ready(function(){
+			$('#data_1 .input-group.date').datepicker({
+			    todayBtn: "linked",
+			    keyboardNavigation: false,
+			    forceParse: false,
+			    calendarWeeks: true,
+			    autoclose: true
+			});
+			
+			$('#data_2 .input-group.date').datepicker({
+			    todayBtn: "linked",
+			    keyboardNavigation: false,
+			    forceParse: false,
+			    calendarWeeks: true,
+			    autoclose: true
+			});
+			
+            $('.dataTables-fitness').DataTable({
+                dom: '<"html5buttons"B>lTfgitp',
+                buttons: [
+                    { extend: 'copy'},
+                    {extend: 'csv'},
+                    {extend: 'excel', title: 'Fitness & Routine Activity'},
+                    {extend: 'pdf', title: 'Fitness & Routine Activity'},
+
+                    {extend: 'print',
+                     customize: function (win){
+                            $(win.document.body).addClass('white-bg');
+                            $(win.document.body).css('font-size', '10px');
+
+                            $(win.document.body).find('table')
+                                    .addClass('compact')
+                                    .css('font-size', 'inherit');
+                    }
+                    }
+                ]
+
+            });
+        });
+    </script>

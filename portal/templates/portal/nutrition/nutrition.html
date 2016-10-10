@@ -1,0 +1,65 @@
+{% extends 'core/index.html' %}
+
+{% load staticfiles %}
+
+{% block title %}
+Personal Health Cloud | Nutrition
+{% endblock %}
+
+{% block additional_css %}
+<link href="{% static 'css/plugins/datapicker/datepicker3.css' %}" rel="stylesheet">
+<link href="{% static 'css/plugins/morris/morris-0.4.3.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block menu %}
+	{% include 'portal/menu.html' %}
+{% endblock %}
+
+{% block content %}
+
+<div class="row wrapper border-bottom white-bg page-heading">
+	<div class="col-lg-6">
+		<h2>Nutrition&nbsp;&nbsp;<a href="{% url 'portal-nutrition-update' %}"><i class="fa fa-history"></i></a></h2>
+	</div>
+	
+	<div class="col-lg-6">
+		<br>
+		<div class="col-lg-4 right">
+			<div class="form-group" id="data_1">
+				<div class="input-group date">
+					<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input name="selectFrom" id="selectFrom" type="text" class="form-control" value="{{periodStart.month}}/{{periodStart.day}}/{{periodStart.year}}">
+				</div>
+			</div>
+		</div>
+			
+		<div class="col-lg-4">
+			<div class="form-group" id="data_2">
+				<div class="input-group date">
+					<span class="input-group-addon"><i class="fa fa-calendar"></i></span><input name="selectTo" id="selectTo" type="text" class="form-control" value="{{periodEnd.month}}/{{periodEnd.day}}/{{periodEnd.year}}">
+				</div>
+			</div>
+		</div>
+		
+		<div class="col-lg-4">
+			<a class="btn btn-success" name="getURL" id="getURL" href="{% url 'portal-nutrition-view' %}?fy={{periodStart.month}}&fd={{periodStart.day}}&fy={{periodStart.year}}&tm={{periodEnd.month}}&td={{periodEnd.day}}&ty={{periodEnd.year}}"><i class="fa fa-refresh"></i></a>
+		</div>
+	</div>
+</div>
+
+<div class="row wrapper wrapper-content animated fadeInRight">
+	
+	{% include 'portal/nutrition/nutrition-stats.html' %}
+	
+	{% include 'portal/nutrition/nutrition-stacked.html' %}
+	
+	{% include 'portal/nutrition/nutrition-individual-bars.html' %}
+	
+	{% include 'portal/nutrition/nutrition-meals.html' %}
+	
+</div>
+
+{% endblock %}
+
+{% block additional_js %}
+	{% include 'portal/nutrition/nutrition-additional-js.html' %}
+{% endblock %}

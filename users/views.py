@@ -113,13 +113,18 @@ def profilePasswordUpdate(request):
 
 def signin(request):
     template = 'users/login.html'
-    params = {}
     
-    return render(request,template,params)
+    if ('page_type_action' in request.session.keys()) and not request.session['page_type_action']:
+        request.session['error'] = None
+    
+    request.session['page_type_action'] = False
+    
+    return render(request,template)
 
 def actionLogin(request):
     page = 'users-login'
-    params = {}
+    
+    request.session['error'] = None
     
     if request.method == "POST":
         status = True
@@ -127,6 +132,7 @@ def actionLogin(request):
         for each in ['email','password']:
             if each not in request.POST.keys():
                 status = False
+                break
         
         if status:
             email = request.POST['email']
@@ -137,19 +143,34 @@ def actionLogin(request):
             if user is not None and user.is_active:
                 login(request, user)
                 page = 'portal-dashboard'
+            
+            else:
+                request.session['error'] = "Invalid email and/or password"
+        
+        else:
+            request.session['error'] = "Please complete all required fields"
+        
+    else:
+        request.session['error'] = "Invalid request type"
     
-    return cRedirect(page,params)
+    request.session['page_type_action'] = True
+    
+    return redirect(page)
 
 def register(request):
     template = 'users/register.html'
     
-    params = {}
+    if ('page_type_action' in request.session.keys()) and not request.session['page_type_action']:
+        request.session['error'] = None
     
-    return render(request,template,params)
+    request.session['page_type_action'] = False
+    
+    return render(request,template)
 
 def actionRegister(request):
     page = 'users-register'
-    params = {'msg' : None}
+    
+    request.session['error'] = None
     
     if request.method == "POST":
         status = True
@@ -157,9 +178,9 @@ def actionRegister(request):
         for each in ['firstName','lastName','gender','dob','email','password','terms']:
             if each not in request.POST.keys():
                 status = False
-                params['msg'] = "Missing field"
+                break
         
-        if status == True:
+        if status:
             firstName = request.POST['firstName']
             lastName = request.POST['lastName']
             gender = request.POST['gender']
@@ -199,8 +220,6 @@ def actionRegister(request):
                 if r.status_code in [200,201,"200","201"]:
                     validicUser = r.json()['user']
                     
-                    print validicUser
-                    
                     if validicUser['uid'] in (user.id, str(user.id)):
                         p.validic_id = validicUser['_id']
                         p.validic_access_token = validicUser['access_token']
@@ -212,31 +231,20 @@ def actionRegister(request):
                             login(request,u)
                         
                         page = 'users-profile-edit'
-                    
-                else:
-                    params['msg'] = "Validic user creation failed"
             
             else:
-                params['msg'] = "Email already in use"
+                request.session['error'] = "Email address already in use"
+        
+        else:
+            request.session['error'] = "Please complete all required fields"
     
-    print params['msg']
+    request.session['page_type_action'] = True
     
     return redirect(page)
     
     
 @login_required
 def signout(request):
-    params = {}
-    
     logout(request)
     
-    return cRedirect('users-login',params)
-
-def populateState():
-    with open(os.path.join(SETTINGS.BASE_DIR,'setup','states.csv'),'rb') as fh:
-        reader = csv.reader(fh)
-        
-        for row in reader:
-            print row[0], row[1]
-            State.objects.update_or_create(name_long=row[0],name_short=row[1])
-
+    return cRedirect('users-login')

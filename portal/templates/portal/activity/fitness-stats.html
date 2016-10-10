@@ -1,0 +1,53 @@
+<div class="row">
+	<div class="col-lg-3">
+		<div class="ibox float-e-margins">
+			<div class="ibox-title">
+				<h5>Distance &amp; Steps</h5>
+			</div>
+			
+			<div class="ibox-content">
+				<h1 class="no-margins">
+					{{dailyStats.distance}}<small>m</small> 
+					{% if dailyStats.distance %}<small>({{dailyStats.distanceMiles}} miles)</small>{% endif %}
+				</h1>
+				<small>{{dailyStats.steps}} Steps</small>
+			</div>
+		</div>
+	</div>
+	
+    <div class="col-lg-3">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Duration</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins">{{dailyStats.duration}}</h1>
+                <small>hours</small>
+            </div>
+        </div>
+    </div>
+	
+    <div class="col-lg-3">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Floors</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins">{{dailyStats.floors}}</h1>
+                <small>Elevation: {{dailyStats.elevation}}m</small>
+            </div>
+        </div>
+    </div>
+	
+	<div class="col-lg-3">
+        <div class="ibox float-e-margins">
+            <div class="ibox-title">
+                <h5>Calories</h5>
+            </div>
+            <div class="ibox-content">
+                <h1 class="no-margins">{{dailyStats.calories}}</h1>
+                <small>&nbsp;</small>
+            </div>
+        </div>
+	</div>
+</div>

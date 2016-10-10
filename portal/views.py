@@ -12,24 +12,35 @@ from broker.api import *
 
 from users.models import *
 
+DEVICE_CONNECTION_URL_PREFIX = "https://app.validic.com/%s/%s"
+
 @login_required
-def dashboard(request):
-    template = 'portal/dashboard.html'
+def dataUpdate(request, page, constructs):
+    updates = []
+    tzOffset = "-04:00"
     
-    profile = Profile.objects.get(user=request.user)
+    previous = "2016-01-01T00:00:00" + tzOffset
     
-    params = {
-                'profile' : profile,
-                'menuHighlight' : "dashboard",
-                'deviceConnectionURL' : "https://app.validic.com/%s/%s" % (SETTINGS.VALIDIC_ID,profile.validic_access_token)
-            }
+    for construct in constructs:
     
-    return render(request,template,params)
+        if construct['model'].objects.filter(user=request.user).exists():
+            previous = construct['model'].objects.filter(user=request.user,timestamp__isnull=False).latest('timestamp').timestamp.strftime("%Y-%m-%dT%H:%M:%S") + tzOffset
+            
+        updates.append(construct['obj'](user=request.user,startDate=previous,endDate=datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S") + tzOffset))
+    
+        for update in updates:
+            update.getData()
+            
+            update.store()
+            
+            while update.getNext():
+                update.store()
+    
+    return redirect(page)
 
 @login_required
 def fitnessView(request):
-#def fitnessView(request):
-    template = 'portal/fitness.html'
+    template = 'portal/activity/fitness.html'
     
     # DATE RANGE PROCESSING
     
@@ -226,18 +237,10 @@ def fitnessView(request):
     
     profile = Profile.objects.get(user=request.user)
     
-    for k,v in activityByIntensity['calories'].items():
-        print k,v
-    
-    print "\n\n****\n\n"
-    
-    for k,v in activityByCategory['calories'].items():
-        print k,v
-    
     params = {
                 'profile' : profile,
                 'menuHighlight' : "fitness",
-                'deviceConnectionURL' : "https://app.validic.com/%s/%s" % (SETTINGS.VALIDIC_ID,profile.validic_access_token),
+                'deviceConnectionURL' : DEVICE_CONNECTION_URL_PREFIX % (SETTINGS.VALIDIC_ID,profile.validic_access_token),
                 
                 'periodStart' : start,
                 'periodEnd' : end,
@@ -257,39 +260,210 @@ def fitnessView(request):
     
     return render(request,template,params)
 
+### NUTRITION ###
+
 @login_required
-def fitnessUpdate(request):
-    page = 'portal-fitness-view'
+def nutritionView(request):
+    template = 'portal/nutrition/nutrition.html'
     
-    updates = []
-    tzOffset = "-04:00"
+    # DATE RANGE PROCESSING
     
-    previousFitness = "2016-01-01T00:00:00" + tzOffset
-    previousRoutine = "2016-01-01T00:00:00" + tzOffset
+    end = datetime.date.today()
+    start = end - timedelta(days=14)
     
-    if Fitness.objects.filter(user=request.user).exists():
-        previousFitness = Fitness.objects.filter(user=request.user,timestamp__isnull=False).latest('timestamp').timestamp.strftime("%Y-%m-%dT%H:%M:%S") + tzOffset
+    constraints = {'fm' : None,'fd' : None,'fy' : None,'tm' : None,'td' : None,'ty' : None}
+    custom = True
     
-    if Routine.objects.filter(user=request.user).exists():
-        previousRoutine = Routine.objects.filter(user=request.user,timestamp__isnull=False).latest('timestamp').timestamp.strftime("%Y-%m-%dT%H:%M:%S") + tzOffset
+    for each in constraints.keys():
+        if each not in request.GET.keys():
+            custom = False
+            break
+        elif request.GET[each] and request.GET[each].isdigit():
+            constraints[each] = int(request.GET[each])
+        else:
+            custom = False
+            break
     
-    updates.append(oFitness(user=request.user,startDate=previousFitness,endDate=datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S") + tzOffset))
+    if custom:
+        start = datetime.date(constraints['fy'],constraints['fm'],constraints['fd'])
+        end = datetime.date(constraints['ty'],constraints['tm'],constraints['td'])
     
-    updates.append(oRoutine(user=request.user,startDate=previousRoutine,endDate=datetime.datetime.now().strftime("%Y-%m-%dT%H:%M:%S") + tzOffset))
+    startTime = datetime.datetime.combine(start,datetime.time())
+    endTime = datetime.datetime.combine((end + datetime.timedelta(1)), datetime.time())
     
-    for allUpdates in updates:
+    # STAT BOX INFO
     
-        allUpdates.getData()
+    dailyCalories = Nutrition.objects.filter(user=request.user,timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('calories'))['calories__sum']
+    dailyCarbs = Nutrition.objects.filter(user=request.user,timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('carbohydrates'))['carbohydrates__sum']
+    dailyFat = Nutrition.objects.filter(user=request.user,timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('fat'))['fat__sum']
+    dailyProtein = Nutrition.objects.filter(user=request.user,timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('protein'))['protein__sum']
+    dailyFiber = Nutrition.objects.filter(user=request.user,timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('fiber'))['fiber__sum']
+    dailyWater = Nutrition.objects.filter(user=request.user,timestamp__gte=startTime,timestamp__lte=endTime).aggregate(Sum('water'))['water__sum']
     
-        allUpdates.store()
+    dailyStats = {
+                'calories' : int(math.ceil(dailyCalories)) if dailyCalories else 0,
+                'carbs' : int(math.ceil(dailyCarbs)) if dailyCarbs else 0,
+                'fat' : dailyFat if dailyFat else 0,
+                'protein' : dailyProtein if dailyProtein else 0,
+                'fiber' : dailyFiber if dailyFiber else 0,
+                'water' : int(math.ceil(dailyWater)) if dailyWater else 0
+    }
     
-        while allUpdates.getNext():
-            allUpdates.store()
+    # KEY STATS AREA
     
-    return redirect(page)
+    nutrition = Nutrition.objects.filter(user=request.user,timestamp__gte=startTime,timestamp__lte=endTime)
+    
+    keyStats = {}
+    keyStatsY = ['Carbs', 'Fat', 'Fiber', 'Protein']
+    
+    lineCharts = {'Calories' : {}, 'Water' : {}, 'Sodium' : {}}
+    
+    for record in nutrition:
+        if (record.timestamp.date() not in keyStats.keys()) and (record.carbohydrates or record.fat or record.fiber or record.protein):
+            keyStats[record.timestamp.date()] = {}
+        
+        if record.carbohydrates and ('Carbs' in keyStats[record.timestamp.date()].keys()):
+            keyStats[record.timestamp.date()]['Carbs'] += record.carbohydrates
+        
+        elif record.carbohydrates:
+            keyStats[record.timestamp.date()]['Carbs'] = record.carbohydrates
+        
+        if record.fat and ('Fat' in keyStats[record.timestamp.date()].keys()):
+            keyStats[record.timestamp.date()]['Fat'] += record.fat
+        
+        elif record.carbohydrates:
+            keyStats[record.timestamp.date()]['Fat'] = record.fat
+        
+        if record.fiber and ('Fiber' in keyStats[record.timestamp.date()].keys()):
+            keyStats[record.timestamp.date()]['Fiber'] += record.fiber
+        
+        elif record.fiber:
+            keyStats[record.timestamp.date()]['Fiber'] = record.fiber
+        
+        if record.protein and ('Protein' in keyStats[record.timestamp.date()].keys()):
+            keyStats[record.timestamp.date()]['Protein'] += record.protein
+        
+        elif record.protein:
+            keyStats[record.timestamp.date()]['Protein'] = record.protein
+        
+        if record.calories and record.timestamp.date() in lineCharts['Calories'].keys():
+            lineCharts['Calories'][record.timestamp.date()] += record.calories
+        
+        elif record.calories:
+            lineCharts['Calories'][record.timestamp.date()] = record.calories
+        
+        if record.water and record.timestamp.date() in lineCharts['Water'].keys():
+            lineCharts['Water'][record.timestamp.date()] += record.water
+        
+        elif record.water:
+            lineCharts['Water'][record.timestamp.date()] = record.water
+        
+        if record.sodium and record.timestamp.date() in lineCharts['Sodium'].keys():
+            lineCharts['Sodium'][record.timestamp.date()] += record.sodium
+        
+        elif record.calories:
+            lineCharts['Sodium'][record.timestamp.date()] = record.sodium
+    
+    # REQUIRED VARS & RETURN
+    
+    profile = Profile.objects.get(user=request.user)
+    
+    params = {
+        'profile' : profile,
+        'menuHighlight' : "nutrition",
+        'deviceConnectionURL' : DEVICE_CONNECTION_URL_PREFIX % (SETTINGS.VALIDIC_ID,profile.validic_access_token),
+        
+        'periodStart' : start,
+        'periodEnd' : end,
+        'dailyStats' : dailyStats,
+        
+        'keyStats' : keyStats,
+        'keyStatsY' : keyStatsY,
+        
+        'lineCharts' : lineCharts,
+    }
+    
+    return render(request,template,params)
+
+### SLEEP ###
+
+@login_required
+def sleepView(request):
+    template = 'portal/sleep/sleep.html'
+    
+    # DATE RANGE PROCESSING
+    
+    end = datetime.date.today()
+    start = end - timedelta(days=14)
+    
+    constraints = {'fm' : None,'fd' : None,'fy' : None,'tm' : None,'td' : None,'ty' : None}
+    custom = True
+    
+    for each in constraints.keys():
+        if each not in request.GET.keys():
+            custom = False
+            break
+        elif request.GET[each] and request.GET[each].isdigit():
+            constraints[each] = int(request.GET[each])
+        else:
+            custom = False
+            break
+    
+    if custom:
+        start = datetime.date(constraints['fy'],constraints['fm'],constraints['fd'])
+        end = datetime.date(constraints['ty'],constraints['tm'],constraints['td'])
+    
+    startTime = datetime.datetime.combine(start,datetime.time())
+    endTime = datetime.datetime.combine((end + datetime.timedelta(1)), datetime.time())
+    
+    sleep = Sleep.objects.filter(user=request.user,timestamp__gte=startTime,timestamp__lte=endTime)
+    
+    keyStats = {}
+    keyStatsY = ['Light', 'Deep', 'Rem']
+    
+    for record in sleep:
+        if (record.timestamp.date() not in keyStats.keys()) and (record.light or record.deep or record.rem):
+            keyStats[record.timestamp.date()] = {}
+        
+        if record.light and ('Light' in keyStats[record.timestamp.date()].keys()):
+            keyStats[record.timestamp.date()]['Light'] += record.light
+        
+        elif record.light:
+            keyStats[record.timestamp.date()]['Light'] = record.light
+        
+        if record.deep and ('Deep' in keyStats[record.timestamp.date()].keys()):
+            keyStats[record.timestamp.date()]['Deep'] += record.deep
+        
+        elif record.deep:
+            keyStats[record.timestamp.date()]['Deep'] = record.deep
+        
+        if record.rem and ('Rem' in keyStats[record.timestamp.date()].keys()):
+            keyStats[record.timestamp.date()]['Rem'] += record.rem
+        
+        elif record.rem:
+            keyStats[record.timestamp.date()]['Rem'] = record.rem
+    
+    # REQUIRED VARS & RETURN
+    
+    profile = Profile.objects.get(user=request.user)
+    
+    params = {
+        'profile' : profile,
+        'menuHighlight' : "sleep",
+        'deviceConnectionURL' : DEVICE_CONNECTION_URL_PREFIX % (SETTINGS.VALIDIC_ID,profile.validic_access_token),
+        
+        'periodStart' : start,
+        'periodEnd' : end,
+        
+        'keyStats' : keyStats,
+        'keyStatsY' : keyStatsY,
+    }
+    
+    return render(request,template,params)
 
 @login_required
 def deviceManagement(request):
     profile = Profile.objects.get(user=request.user)
     
-    return redirect("https://app.validic.com/%s/%s" % (SETTINGS.VALIDIC_ID,profile.validic_id))
+    return redirect(DEVICE_CONNECTION_URL_PREFIX % (SETTINGS.VALIDIC_ID,profile.validic_id))
+

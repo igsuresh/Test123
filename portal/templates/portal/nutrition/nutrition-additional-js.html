@@ -1,0 +1,164 @@
+{% load staticfiles %}
+
+<script src="{% static 'js/math.min.js' %}"></script>
+
+<script src="{% static 'js/plugins/datapicker/bootstrap-datepicker.js' %}"></script>
+
+<script src="{% static 'js/plugins/morris/raphael-2.1.0.min.js' %}"></script>
+<script src="{% static 'js/plugins/morris/morris.js' %}"></script>
+
+<script>
+var url ="{% url 'portal-nutrition-view' %}?fy={{periodStart.month}}&fd={{periodStart.day}}&fy={{periodStart.year}}&tm={{periodEnd.month}}&td={{periodEnd.day}}&ty={{periodEnd.year}}";
+		
+var selectFrom = [{{periodStart.month}},{{periodStart.day}},{{periodStart.year}}];
+
+var selectTo = [{{periodEnd.month}},{{periodEnd.day}},{{periodEnd.year}}];
+		
+		$('#selectFrom').on('change', function() {
+			selectFrom = this.value.split("/");
+			$("#getURL").attr(
+								"href",
+								"{% url 'portal-nutrition-view' %}?fm=" + selectFrom[0] + "&fd=" + selectFrom[1] + "&fy=" + selectFrom[2] + "&tm=" + selectTo[0] + "&td=" + selectTo[1] + "&ty=" + selectTo[2]
+							);
+		});
+		
+		$('#selectTo').on('change', function() {
+			selectTo = this.value.split("/");
+			$("#getURL").attr(
+								"href",
+								"{% url 'portal-nutrition-view' %}?fm=" + selectFrom[0] + "&fd=" + selectFrom[1] + "&fy=" + selectFrom[2] + "&tm=" + selectTo[0] + "&td=" + selectTo[1] + "&ty=" + selectTo[2]
+							);
+		});
+
+$(function() {
+    Morris.Area({
+        element: 'area-nutrition-key-stats',
+        data: [
+				
+				{% for period, categories in keyStats.items %}
+				
+				{
+					period: '{{period.year}}-{{period.month}}-{{period.day}}',
+					
+					{% for category,grams in categories.items %}
+					
+					'{{category}}' : {{grams}}
+					
+					{% if not forloop.last %},{% endif %}
+					
+					{% endfor %}
+				}
+				
+				{% if not forloop.last %},{% endif %}
+				
+				{% endfor %}
+			],
+        xkey: 'period',
+        ykeys: [
+					{% for e in keyStatsY %}
+				
+					'{{e}}'
+				
+					{% if not forloop.last %},{% endif %}
+				
+					{% endfor %}
+				],
+        labels: [
+					{% for e in keyStatsY %}
+			
+					'{{e}}'
+			
+					{% if not forloop.last %},{% endif %}
+			
+					{% endfor %}
+				],
+        pointSize: 2,
+        hideHover: 'auto',
+        resize: true,
+        lineColors: ['#87d6c6', '#54cdb4','#1ab394'],
+        lineWidth:2,
+        pointSize:1,
+    });
+	
+    Morris.Line({
+        element: 'line-calories',
+            data: [
+				{% for k,v in lineCharts.Calories.items %}
+				
+				{ date: '{{k.year}}-{{k.month}}-{{k.day}}', calories: {{v}} }
+				
+				{% if not forloop.last %},{% endif %}
+				
+				{% endfor %}
+            ],
+        xkey: 'date',
+        ykeys: ['calories'],
+        resize: true,
+        lineWidth:4,
+        labels: ['Calories'],
+        lineColors: ['#1ab394'],
+        pointSize:5,
+    });
+	
+    Morris.Line({
+        element: 'line-water',
+            data: [
+				{% for k,v in lineCharts.Water.items %}
+				
+				{ date: '{{k.year}}-{{k.month}}-{{k.day}}', water: {{v}} }
+				
+				{% if not forloop.last %},{% endif %}
+				
+				{% endfor %}
+            ],
+        xkey: 'date',
+        ykeys: ['water'],
+        resize: true,
+        lineWidth:4,
+        labels: ['Water'],
+        lineColors: ['#1ab394'],
+        pointSize:5,
+    });
+	
+    Morris.Line({
+        element: 'line-sodium',
+            data: [
+				{% for k,v in lineCharts.Sodium.items %}
+				
+				{ date: '{{k.year}}-{{k.month}}-{{k.day}}', sodium: {{v}} }
+				
+				{% if not forloop.last %},{% endif %}
+				
+				{% endfor %}
+            ],
+        xkey: 'date',
+        ykeys: ['sodium'],
+        resize: true,
+        lineWidth:4,
+        labels: ['Sodium'],
+        lineColors: ['#1ab394'],
+        pointSize:5,
+    });
+	
+});
+
+
+$(document).ready(function(){
+	$('#data_1 .input-group.date').datepicker({
+	    todayBtn: "linked",
+	    keyboardNavigation: false,
+	    forceParse: false,
+	    calendarWeeks: true,
+	    autoclose: true
+	});
+	
+	$('#data_2 .input-group.date').datepicker({
+	    todayBtn: "linked",
+	    keyboardNavigation: false,
+	    forceParse: false,
+	    calendarWeeks: true,
+	    autoclose: true
+	});
+});
+
+</script>
