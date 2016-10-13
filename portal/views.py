@@ -331,7 +331,7 @@ def nutritionView(request):
         if record.fat and ('Fat' in keyStats[record.timestamp.date()].keys()):
             keyStats[record.timestamp.date()]['Fat'] += record.fat
         
-        elif record.carbohydrates:
+        elif record.fat:
             keyStats[record.timestamp.date()]['Fat'] = record.fat
         
         if record.fiber and ('Fiber' in keyStats[record.timestamp.date()].keys()):
@@ -346,22 +346,22 @@ def nutritionView(request):
         elif record.protein:
             keyStats[record.timestamp.date()]['Protein'] = record.protein
         
-        if record.calories and record.timestamp.date() in lineCharts['Calories'].keys():
+        if record.calories and (record.timestamp.date() in lineCharts['Calories'].keys()):
             lineCharts['Calories'][record.timestamp.date()] += record.calories
         
         elif record.calories:
             lineCharts['Calories'][record.timestamp.date()] = record.calories
         
-        if record.water and record.timestamp.date() in lineCharts['Water'].keys():
+        if record.water and (record.timestamp.date() in lineCharts['Water'].keys()):
             lineCharts['Water'][record.timestamp.date()] += record.water
         
         elif record.water:
             lineCharts['Water'][record.timestamp.date()] = record.water
         
-        if record.sodium and record.timestamp.date() in lineCharts['Sodium'].keys():
+        if record.sodium and (record.timestamp.date() in lineCharts['Sodium'].keys()):
             lineCharts['Sodium'][record.timestamp.date()] += record.sodium
         
-        elif record.calories:
+        elif record.sodium:
             lineCharts['Sodium'][record.timestamp.date()] = record.sodium
     
     # REQUIRED VARS & RETURN

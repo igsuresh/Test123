@@ -172,7 +172,7 @@ var url ="{% url 'portal-fitness-view' %}?fy={{periodStart.month}}&fd={{periodSt
 			    data: [
 						{% for intensity,duration in activityByIntensity.duration.items %}
 						
-						{ label: "{{intensity}}", value: math.round(math.divide({{duration}},60)) },
+						{ label: "{{intensity}}", value: math.round(math.divide({{duration}},60)) }
 						
 						{% if not forloop.last %},{% endif %}
 						
@@ -191,7 +191,7 @@ var url ="{% url 'portal-fitness-view' %}?fy={{periodStart.month}}&fd={{periodSt
 		        data: [
 						{% for category,duration in activityByCategory.duration.items %}
 					
-						{ label: "{{category}}", value: math.round(math.divide({{duration}},60)) },
+						{ label: "{{category}}", value: math.round(math.divide({{duration}},60)) }
 					
 						{% if not forloop.last %},{% endif %}
 					

@@ -31,6 +31,9 @@ var selectTo = [{{periodEnd.month}},{{periodEnd.day}},{{periodEnd.year}}];
 		});
 
 $(function() {
+	
+	{% if keyStats %}
+	
     Morris.Area({
         element: 'area-nutrition-key-stats',
         data: [
@@ -80,6 +83,10 @@ $(function() {
         pointSize:1,
     });
 	
+	{% endif %}
+	
+	{% if lineCharts.Calories %}
+	
     Morris.Line({
         element: 'line-calories',
             data: [
@@ -99,6 +106,10 @@ $(function() {
         lineColors: ['#1ab394'],
         pointSize:5,
     });
+	
+	{% endif %}
+	
+	{% if lineCharts.Water %}
 	
     Morris.Line({
         element: 'line-water',
@@ -120,6 +131,10 @@ $(function() {
         pointSize:5,
     });
 	
+	{% endif %}
+	
+	{% if lineCharts.Sodium %}
+	
     Morris.Line({
         element: 'line-sodium',
             data: [
@@ -139,6 +154,8 @@ $(function() {
         lineColors: ['#1ab394'],
         pointSize:5,
     });
+	
+	{% endif %}
 	
 });
 
