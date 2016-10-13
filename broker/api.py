@@ -246,7 +246,7 @@ class oNutrition(oDataObject):
     model = Nutrition
     dataType = "nutrition"
     
-    def storeUpdate(record,last_updated,source):
+    def storeUpdate(self,record,last_updated,source):
         model.objects.filter(pk=id).update(
                                                 timestamp = fixTime(record['timestamp'],record['utc_offset']),
                                                 last_updated = last_updated,
@@ -262,7 +262,7 @@ class oNutrition(oDataObject):
                                                 meal = record['meal']
                                             )
     
-    def storeCreateInst(record,id,last_updated,source,profile):
+    def storeCreateInst(self,record,id,last_updated,source,profile):
         return model(
                         id = id,
                         timestamp = fixTime(record['timestamp'],record['utc_offset']),
@@ -286,7 +286,7 @@ class oSleep(oDataObject):
     model = Sleep
     dataType = "sleep"
     
-    def storeUpdate(record,last_updated,source):
+    def storeUpdate(self,record,last_updated,source):
         model.objects.filter(pk=id).update(
                                                 timestamp = fixTime(record['timestamp'],record['utc_offset']),
                                                 last_updated = last_updated,
@@ -300,7 +300,7 @@ class oSleep(oDataObject):
                                                 total_sleep = record['total_sleep']
                                             )
     
-    def storeCreateInst(record,id,last_updated,source,profile):
+    def storeCreateInst(self,record,id,last_updated,source,profile):
         return model(
                         id = id,
                         timestamp = fixTime(record['timestamp'],record['utc_offset']),
@@ -321,7 +321,7 @@ class oWeight(oDataObject):
     model = Weight
     dataType = "weight"
     
-    def storeUpdate(record,last_updated,source):
+    def storeUpdate(self,record,last_updated,source):
         model.objects.filter(pk=id).update(
                                                 timestamp = fixTime(record['timestamp'],record['utc_offset']),
                                                 last_updated = last_updated,
@@ -335,7 +335,7 @@ class oWeight(oDataObject):
                                                 bmi = record['bmi']
                                             )
     
-    def storeCreateInst(record,id,last_updated,source,profile):
+    def storeCreateInst(self,record,id,last_updated,source,profile):
         return model(
                         id = id,
                         timestamp = fixTime(record['timestamp'],record['utc_offset']),
@@ -357,7 +357,7 @@ class oDiabetes(oDataObject):
     model = Diabetes
     dataType = "diabetes"
     
-    def storeUpdate(record,last_updated,source):
+    def storeUpdate(self,record,last_updated,source):
         model.objects.filter(pk=id).update(
                                                 timestamp = fixTime(record['timestamp'],record['utc_offset']),
                                                 last_updated = last_updated,
@@ -374,7 +374,7 @@ class oDiabetes(oDataObject):
                                                 blood_glucose = record['bloody_glucose']
                                             )
     
-    def storeCreateInst(record,id,last_updated,source,profile):
+    def storeCreateInst(self,record,id,last_updated,source,profile):
         return model(
                         id = id,
                         timestamp = fixTime(record['timestamp'],record['utc_offset']),
@@ -398,7 +398,7 @@ class Biometrics(oDataObject):
     model = Biometrics
     dataType = "biometrics"
     
-    def storeUpdate(record,last_updated,source):
+    def storeUpdate(self,record,last_updated,source):
         model.objects.filter(pk=id).update(
                                                 timestamp = fixTime(record['timestamp'],record['utc_offset']),
                                                 last_updated = last_updated,
@@ -433,7 +433,7 @@ class Biometrics(oDataObject):
                                             )
     
     
-    def storeCreateInst(record,id,last_updated,source,profile):
+    def storeCreateInst(self,record,id,last_updated,source,profile):
         return model(
                         id = id,
                         timestamp = fixTime(record['timestamp'],record['utc_offset']),

@@ -247,4 +247,4 @@ def actionRegister(request):
 def signout(request):
     logout(request)
     
-    return cRedirect('users-login')
+    return redirect('users-login')
