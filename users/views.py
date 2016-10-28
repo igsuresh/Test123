@@ -230,7 +230,7 @@ def actionRegister(request):
                         if u is not None:
                             login(request,u)
                         
-                        page = 'users-profile-edit'
+                        page = 'users-profile-general-edit'
             
             else:
                 request.session['error'] = "Email address already in use"
