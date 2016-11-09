@@ -85,7 +85,7 @@ def fitnessView(request):
                 
                 'duration' : round(dailyDuration/3600,2) if dailyDuration else 0,
                 
-                'floors' : roun(dailyFloors,1) if dailyFloors else 0,
+                'floors' : round(dailyFloors,1) if dailyFloors else 0,
                 'elevation' : int(math.ceil(dailyElevation)) if dailyElevation else 0,
                 
                 'calories' : int(math.ceil(dailyCalories)) if dailyCalories else 0

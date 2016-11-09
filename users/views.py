@@ -43,7 +43,7 @@ def profileUpdateGeneral(request):
         city = request.POST['city']
         state = None
         
-        if request.POST['state'] and State.objects.filter(id=request.POST['state']).exists():
+        if isinstance(request.POST['state'],int) and State.objects.filter(id=request.POST['state']).exists():
             state = State.objects.get(id=request.POST['state'])
         
         zipcode = request.POST['zipcode']
